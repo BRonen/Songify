@@ -1,0 +1,21 @@
+{
+  "name": "RiverSong",
+  "version": "1.0.0",
+  "description": "Web music player",
+    
+  "repository": "https://github.com/BRonen/RiverSong.git",
+  "author": "BRonen <brennopereira6@gmail.com>",
+  "license": "MIT",
+
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+
+  "dependencies": {
+    "next": "^11.0.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  }
+}
