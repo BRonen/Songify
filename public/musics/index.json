@@ -1,22 +1,27 @@
 [
   {
-    "name": "Sarcasm - Get Scared",
+    "name": "Sarcasm",
+    "singer": "Get Scared",
     "path": "SarcasmGetScared.mp3"
   },
   {
-    "name": "Slow Dancing In The Dark - Joji",
+    "name": "Slow Dancing In The Dark",
+    "singer": "Joji",
     "path": "JojiSlowDancingInTheDark.mp3"
   },
   {
-    "name": "Delírio - Konai",
+    "name": "Delírio",
+    "singer": "Konai",
     "path": "KonaiDelirio.mp3"
   },
   {
-    "name": "Pretty Boy - Joji",
+    "name": "Pretty Boy",
+    "singer": "Joji",
     "path": "JojiPrettyBoy.mp3"
   },
   {
-    "name": "Gostava Tanto de Vôce - Tim Maia",
+    "name": "Gostava Tanto de Você",
+    "singer": "Tim Maia",
     "path": "TimMaiaGostavaTantoDeVoce.mp3"
   }
 ]

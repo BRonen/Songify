@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react"
 
-import play from "./assets/forward.png"
-import pause from "./assets/pause.png"
-import stop from "./assets/stop.png"
+import play from "../assets/forward.png"
+import pause from "../assets/pause.png"
+import stop from "../assets/stop.png"
 
 function formatDuration(duration){
     const {floor} = Math
@@ -23,6 +23,9 @@ function Controls({audioRef}){
   }
 
   useEffect(()=>{
+    if(!audioRef.current){
+      return
+    }
     if(isPlaying){
       audioRef.current.play()
     }else{
@@ -31,10 +34,16 @@ function Controls({audioRef}){
   }, [isPlaying])
 
   function resetMusic(){
+    if(!audioRef.current){
+      return
+    }
     audioRef.current.currentTime = 0
   }
 
   function currTimeHandler(e){
+    if(!audioRef.current){
+      return
+    }
     audioRef.current.currentTime = e.target.value
   }
 
@@ -43,11 +52,17 @@ function Controls({audioRef}){
   const [duration, setDuration] = useState(0)
 
   function updateMetadata(){
+    if(!audioRef.current){
+      return
+    }
     setDuration(audioRef.current.duration)
   }
 
   function updateCurrTime(){
     setCurrTime(() => {
+      if(!audioRef.current){
+        return
+      }
       const newCurrTime = audioRef.current.currentTime
       barRef.current.value = newCurrTime
       return newCurrTime 
@@ -55,17 +70,22 @@ function Controls({audioRef}){
   }
 
   function updateAfterEnd(){
-    console.log('etsetest')
     resetMusic()
     toggleIsPlaying()
   }
 
   useEffect(()=>{
+    if(!audioRef.current){
+      return
+    }
     audioRef.current.addEventListener("loadedmetadata", updateMetadata)
     audioRef.current.addEventListener("timeupdate", updateCurrTime)
     audioRef.current.addEventListener("ended", updateAfterEnd)
 
     return () => {
+      if(!audioRef.current){
+        return
+      }
       audioRef.current.removeEventListener("loadeddata", updateMetadata)
       audioRef.current.removeEventListener("timeupdate", updateCurrTime)
       audioRef.current.removeEventListener("ended", updateAfterEnd)
@@ -122,13 +142,13 @@ function Controls({audioRef}){
   )
 }
 
-function Music({music}){
+function Player({music}){
   const audioRef = useRef(null)
   const [isLoaded, setLoaded] = useState(false)
 
   //  Gotta Catch 'Em All! (Bugs)
     useEffect(()=>{
-      if(audioRef == null || !audioRef.current){
+      if(!audioRef.current){
         return
       }
       setLoaded(true)
@@ -136,7 +156,7 @@ function Music({music}){
 
   return(
     <div>
-      <h2>{music.name}</h2>
+      <h2>{music.name} - {music.singer}</h2>
       {isLoaded? 
         <Controls audioRef={audioRef}/> : 'Loading...'
       }
@@ -171,30 +191,6 @@ function Music({music}){
         }
       `}</style>
     </div>
-  )
-}
-
-function Player(){
-  const [musicArr, setMusicArr] = useState([])
-
-  useEffect(()=>{
-    fetch("/musics/index.json", {
-      method: "GET"
-    }).then(res => {
-      res.json().then(arr => {
-        setMusicArr(arr)
-      })
-    })
-  }, [])
-
-  return(
-    <>{
-      musicArr.map((music, index)=>{
-        return(
-            <Music key={index} music={music}/>
-        )
-      })
-    }</>
   )
 }
 
