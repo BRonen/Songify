@@ -9,9 +9,6 @@ import cross from '../components/assets/cross15x15.png'
 function Main(){
   const [musicArr, setMusicArr] = useState([])
 
-  const searchRef = useRef()
-  const [searchResults, setSearchResults] = useState([])
-
   //here can be some api or whatever
   useEffect(()=>{
     fetch("/musics/index.json", {
@@ -24,6 +21,10 @@ function Main(){
       })
     })
   }, [])
+
+  //Searching on the musicArr
+  const searchRef = useRef()
+  const [searchResults, setSearchResults] = useState([])
 
   function searchHandler(e){
     const searchString = searchRef.current.value
@@ -59,14 +60,10 @@ function Main(){
 
   return(
     <main>
-      <input type="search" placeholder="Search:"
-        ref={searchRef} onChange={searchHandler}/>
+      {/*<input type="search" placeholder="Search:"
+        ref={searchRef} onChange={searchHandler}/>*/}
 
-      {
-        searchResults.map( (music, index) => (
-          <Player key={index} music={music}/>
-        ) )
-      }
+      <Player playlist={musicArr}/>
 
       <style jsx>{`
         main{

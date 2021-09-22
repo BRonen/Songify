@@ -1,27 +1,31 @@
 import { useEffect, useRef, useState } from "react"
 
-import play from "../assets/forward.png"
-import pause from "../assets/pause.png"
-import stop from "../assets/stop.png"
+import play     from "../assets/forward.png"
+import pause    from "../assets/pause.png"
+import stop     from "../assets/stop.png"
+import next     from "../assets/next.png"
+import previous from "../assets/previous.png"
+import options  from "../assets/barsHorizontal.png"
 
 function formatDuration(duration){
-    const {floor} = Math
-    let seconds = floor(duration%60)
-    let minutes = floor(duration/60)
-    let result = ''
-    //get 00:00 - 9999:60 time template
-    result += minutes<10? `0${minutes}:`:`${minutes}:`
-    result += seconds<10? `0${seconds}`:`${seconds}`
-    return result
-  }
+  const {floor} = Math
+  let seconds = floor(duration%60)
+  let minutes = floor(duration/60)
+  let result = ''
+  //get 00:00 - 9999:60 time template
+  result += minutes<10? `0${minutes}:`:`${minutes}:`
+  result += seconds<10? `0${seconds}`:`${seconds}`
+  return result
+}
 
-function Controls({audioRef}){
+function Music({audioRef, playlistFuncs}){
   const [isPlaying, setIsPlaying] = useState(false)
 
   function toggleIsPlaying() {
     setIsPlaying(oldState => !oldState)
   }
 
+  // apply the Audio state to audioRef
   useEffect(()=>{
     if(!audioRef.current){
       return
@@ -33,10 +37,16 @@ function Controls({audioRef}){
     }
   }, [isPlaying])
 
+  //create ref to audio time range input
+  const barRef = useRef(null)
+  const [currTime, setCurrTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+
   function resetMusic(){
     if(!audioRef.current){
       return
     }
+    toggleIsPlaying()
     audioRef.current.currentTime = 0
   }
 
@@ -46,10 +56,6 @@ function Controls({audioRef}){
     }
     audioRef.current.currentTime = e.target.value
   }
-
-  const barRef = useRef(null)
-  const [currTime, setCurrTime] = useState(0)
-  const [duration, setDuration] = useState(0)
 
   function updateMetadata(){
     if(!audioRef.current){
@@ -86,7 +92,7 @@ function Controls({audioRef}){
       if(!audioRef.current){
         return
       }
-      audioRef.current.removeEventListener("loadeddata", updateMetadata)
+      audioRef.current.removeEventListener("loadedmetadata", updateMetadata)
       audioRef.current.removeEventListener("timeupdate", updateCurrTime)
       audioRef.current.removeEventListener("ended", updateAfterEnd)
     }
@@ -94,11 +100,15 @@ function Controls({audioRef}){
 
   return(
     <div>
+      <img onClick={playlistFuncs.previous} src={previous.src}/>
+
       <img onClick={toggleIsPlaying} src={
         isPlaying? pause.src:play.src
       }/>
 
       <img onClick={resetMusic} src={stop.src}/>
+
+      <img onClick={playlistFuncs.next} src={next.src}/>
 
       {formatDuration(currTime)}
 
@@ -106,6 +116,8 @@ function Controls({audioRef}){
         onChange={currTimeHandler} ref={barRef}/>
 
       {formatDuration(duration)}
+
+      <img onClick={playlistFuncs.show} src={options.src}/>
 
       <style jsx>{`
         div{
@@ -142,29 +154,58 @@ function Controls({audioRef}){
   )
 }
 
-function Player({music}){
+function Player({playlist}){
   const audioRef = useRef(null)
   const [isLoaded, setLoaded] = useState(false)
+  const [actualAudio, setActualAudio] = useState(0)
 
-  //  Gotta Catch 'Em All! (Bugs)
-    useEffect(()=>{
-      if(!audioRef.current){
-        return
-      }
-      setLoaded(true)
-    }, [audioRef])
+  useEffect(()=>{
+    if(!audioRef.current){
+      return
+    }
+    setLoaded(true)
+
+    console.log(playlist, actualAudio)
+  }, [audioRef.current])
+
+  if(!playlist[actualAudio]){
+    return(<h1>Loading...</h1>)
+  }
+
+  const playlistFuncs = {
+    next: () => {
+      setActualAudio(state => {
+        if(state+1 == playlist.length){
+          return 0
+        }
+        return state+1
+      })
+    },
+    previous: () => {
+      setActualAudio(state => {
+        if(state == 0){
+          return playlist.length-1
+        }
+        return state-1
+      })
+    },
+    show: () => {
+      alert('Placeholder to the playlist menu')
+    }
+  }
 
   return(
     <div>
-      <h2>{music.name} - {music.singer}</h2>
+      <h2>{playlist[actualAudio].name} - {playlist[actualAudio].singer}</h2>
       {isLoaded? 
-        <Controls audioRef={audioRef}/> : 'Loading...'
+        <Music audioRef={audioRef}
+          playlistFuncs={playlistFuncs}/> : <h2>Loading...</h2>
       }
 
-      <audio controls={false}
-          preload="metadata"
-          src={'/musics/'+music.path}
-          ref={audioRef}
+      <audio
+        preload="metadata"
+        src={'/musics/'+playlist[actualAudio].path}
+        ref={audioRef}
       />
 
       <style jsx>{`

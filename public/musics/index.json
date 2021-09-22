@@ -1,10 +1,5 @@
 [
   {
-    "name": "Sarcasm",
-    "singer": "Get Scared",
-    "path": "SarcasmGetScared.mp3"
-  },
-  {
     "name": "Slow Dancing In The Dark",
     "singer": "Joji",
     "path": "JojiSlowDancingInTheDark.mp3"
@@ -23,5 +18,10 @@
     "name": "Gostava Tanto de Você",
     "singer": "Tim Maia",
     "path": "TimMaiaGostavaTantoDeVoce.mp3"
+  },
+  {
+    "name": "Malboro nights",
+    "singer": "Lonely God",
+    "path": "LonelyGodMalboroNights.mp3"
   }
 ]
