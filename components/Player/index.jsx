@@ -25,18 +25,6 @@ function Music({audioRef, playlistFuncs}){
     setIsPlaying(oldState => !oldState)
   }
 
-  // apply the Audio state to audioRef
-  useEffect(()=>{
-    if(!audioRef.current){
-      return
-    }
-    if(isPlaying){
-      audioRef.current.play()
-    }else{
-      audioRef.current.pause()
-    }
-  }, [isPlaying])
-
   //create ref to audio time range input
   const barRef = useRef(null)
   const [currTime, setCurrTime] = useState(0)
@@ -57,14 +45,18 @@ function Music({audioRef, playlistFuncs}){
     audioRef.current.currentTime = e.target.value
   }
 
-  function updateMetadata(){
+  function onLoadeddata(){
+    console.log(audioRef, isPlaying)
+  }
+
+  function onLoadedmetadata(){
     if(!audioRef.current){
       return
     }
     setDuration(audioRef.current.duration)
   }
 
-  function updateCurrTime(){
+  function onCurrTime(){
     setCurrTime(() => {
       if(!audioRef.current){
         return
@@ -75,53 +67,88 @@ function Music({audioRef, playlistFuncs}){
     })
   }
 
-  function updateAfterEnd(){
-    resetMusic()
-    toggleIsPlaying()
+  function onEnded(){
+    playlistFuncs.next()
   }
 
   useEffect(()=>{
     if(!audioRef.current){
       return
     }
-    audioRef.current.addEventListener("loadedmetadata", updateMetadata)
-    audioRef.current.addEventListener("timeupdate", updateCurrTime)
-    audioRef.current.addEventListener("ended", updateAfterEnd)
+    audioRef.current.addEventListener("loadedmetadata", onLoadedmetadata)
+    audioRef.current.addEventListener("loadeddata", onLoadeddata)
+    audioRef.current.addEventListener("timeupdate", onCurrTime)
+    audioRef.current.addEventListener("ended", onEnded)
 
     return () => {
       if(!audioRef.current){
         return
       }
-      audioRef.current.removeEventListener("loadedmetadata", updateMetadata)
-      audioRef.current.removeEventListener("timeupdate", updateCurrTime)
-      audioRef.current.removeEventListener("ended", updateAfterEnd)
+      audioRef.current.removeEventListener("loadedmetadata", onLoadedmetadata)
+      audioRef.current.removeEventListener("loadeddata", onLoadeddata)
+      audioRef.current.removeEventListener("timeupdate", onCurrTime)
+      audioRef.current.removeEventListener("ended", onEnded)
     }
   }, [])
+
+  // apply the Audio state to audioRef
+  //and return the right src of button
+  function playPauseButton(){
+    if(audioRef.current){
+      if(isPlaying){
+        audioRef.current.play()
+      }else{
+        audioRef.current.pause()
+      }
+    }
+    return isPlaying? pause.src:play.src
+  }
 
   return(
     <div>
       <img onClick={playlistFuncs.previous} src={previous.src}/>
 
       <img onClick={toggleIsPlaying} src={
-        isPlaying? pause.src:play.src
+        playPauseButton()
       }/>
 
       <img onClick={resetMusic} src={stop.src}/>
 
       <img onClick={playlistFuncs.next} src={next.src}/>
 
-      {formatDuration(currTime)}
+      <div className="bar">
+        {formatDuration(currTime)}
 
-      <input type="range" max={duration}
-        onChange={currTimeHandler} ref={barRef}/>
+        <input type="range" max={duration}
+          onChange={currTimeHandler} ref={barRef}/>
 
-      {formatDuration(duration)}
+        {formatDuration(duration)}
+      </div>
 
       <img onClick={playlistFuncs.show} src={options.src}/>
 
       <style jsx>{`
         div{
           display: flex;
+          gap: 5px 10px;
+          justify-content: space-around;
+        }
+        .bar{
+          width: 100%;
+        }
+        @media (max-width: 600px){
+          div{
+            flex-wrap: wrap;
+          }
+          .bar{
+            flex-wrap: nowrap;
+            width: 80%;
+          }
+        }
+        @media (max-width: 400px){
+          .bar{
+            width: 73%;
+          }
         }
         input[type=range] {
           height: 26px;
@@ -154,18 +181,75 @@ function Music({audioRef, playlistFuncs}){
   )
 }
 
+function PlaylistView({playlist, setAudio, actualIndex}){
+  return(<>
+    <div className='top'>
+      <h2>Name</h2>
+      <h2>Singer</h2>
+    </div>
+    <div className='list'>
+      {
+        playlist.map( (music, index) => (
+          <div className={'row' + (index == actualIndex? ' actual' : '')}
+            onClick={() => setAudio(index)} key={index}>
+            <h3>{music.name}</h3>
+            <h3>{music.singer}</h3>
+          </div>
+        ) )
+      }
+    </div>
+
+    <style jsx>{`
+      .top{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        grid-gap: 10px;
+        margin-top: 15px;
+        border-radius: 20px;
+        background-image: linear-gradient(to bottom, #E0E0E0, #CCC);
+      }
+      .top h2{
+        padding: 5px 10px;
+      }
+      .list{
+        overflow-y: scroll;
+        width: 100%;
+        max-height: 20vh;
+      }
+      .row{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        grid-gap: 10px;
+        margin-top: 3px;
+        border-radius: 15px;
+        cursor: pointer;
+        background-image: linear-gradient(to bottom, #F0F0F0, #DDD);
+      }
+      .row:hover{
+        box-shadow: inset 0 0 3px #000;
+      }
+      .row h3{
+        padding: 5px 10px;
+      }
+      .actual{
+        background-image: linear-gradient(to bottom, #F0F0F0, #EEE);
+        box-shadow: inset -1px -1px 3px #000;
+      }
+    `}</style>
+  </>)
+}
+
 function Player({playlist}){
   const audioRef = useRef(null)
   const [isLoaded, setLoaded] = useState(false)
   const [actualAudio, setActualAudio] = useState(0)
+  const [listVisibility, setListVisibility] = useState(false)
 
   useEffect(()=>{
     if(!audioRef.current){
       return
     }
     setLoaded(true)
-
-    console.log(playlist, actualAudio)
   }, [audioRef.current])
 
   if(!playlist[actualAudio]){
@@ -190,7 +274,7 @@ function Player({playlist}){
       })
     },
     show: () => {
-      alert('Placeholder to the playlist menu')
+      setListVisibility(state => !state)
     }
   }
 
@@ -204,14 +288,20 @@ function Player({playlist}){
 
       <audio
         preload="metadata"
+        autoPlay
         src={'/musics/'+playlist[actualAudio].path}
         ref={audioRef}
       />
 
+      {listVisibility?
+        <PlaylistView playlist={playlist}
+          setAudio={setActualAudio} actualIndex={actualAudio}/> : ''
+      }
+
       <style jsx>{`
         div{
           height: 100%;
-          max-height: 25vh;
+          overflow: hidden;
 
           padding: 15px;
           margin: 10px;
@@ -222,9 +312,6 @@ function Player({playlist}){
           transition: box-shadow 1s;
 
           background-image: linear-gradient(to bottom, #F0F0F0, #DDD);
-        }
-        div:hover{
-          box-shadow: inset 0 0 3px #DDD;
         }
         h2{
           margin: 5px;

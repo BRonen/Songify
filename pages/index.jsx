@@ -146,7 +146,7 @@ export default function Home(){
         ::-webkit-scrollbar-track {
           box-shadow: 1px 1px 2px #000 inset;
           border-radius: 10px;
-          background: linear-gradient(to bottom, #666, #AAA);;
+          background: linear-gradient(to bottom, #666, #AAA);
         }
         ::-webkit-scrollbar-thumb {
           background: linear-gradient(to bottom, #AAA, #666);
