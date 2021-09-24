@@ -34,7 +34,7 @@ function Music({audioRef, playlistFuncs}){
     if(!audioRef.current){
       return
     }
-    toggleIsPlaying()
+    setIsPlaying(false)
     audioRef.current.currentTime = 0
   }
 
