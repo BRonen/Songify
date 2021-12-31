@@ -18,7 +18,7 @@ function formatDuration(duration){
   return result
 }
 
-function Music({audioRef, playlistFuncs}){
+function Music({audioRef, setLoaded, playlistFuncs}){
   const [isPlaying, setIsPlaying] = useState(false)
 
   function toggleIsPlaying() {
@@ -47,6 +47,7 @@ function Music({audioRef, playlistFuncs}){
 
   function onLoadeddata(){
     console.log(audioRef, isPlaying)
+    setLoaded(true)
   }
 
   function onLoadedmetadata(){
@@ -245,13 +246,6 @@ function Player({playlist}){
   const [actualAudio, setActualAudio] = useState(0)
   const [listVisibility, setListVisibility] = useState(false)
 
-  useEffect(()=>{
-    if(!audioRef.current){
-      return
-    }
-    setLoaded(true)
-  }, [audioRef.current])
-
   if(!playlist[actualAudio]){
     return(<h1>Loading...</h1>)
   }
@@ -281,15 +275,14 @@ function Player({playlist}){
   return(
     <div>
       <h2>{playlist[actualAudio].name} - {playlist[actualAudio].singer}</h2>
-      {isLoaded? 
-        <Music audioRef={audioRef}
-          playlistFuncs={playlistFuncs}/> : <h2>Loading...</h2>
-      }
+
+      <Music audioRef={audioRef} setLoaded={setLoaded}
+        playlistFuncs={playlistFuncs}/>
 
       <audio
         preload="metadata"
         autoPlay
-        src={'/musics/'+playlist[actualAudio].path}
+        src={'http://localhost:5000/api/musics/'+playlist[actualAudio].id}
         ref={audioRef}
       />
 

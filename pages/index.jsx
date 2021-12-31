@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 
 import Header from '../components/Header'
@@ -10,59 +10,19 @@ function Main(){
   const [musicArr, setMusicArr] = useState([])
 
   //here can be some api or whatever
-  useEffect(()=>{
-    fetch("/musics/index.json", {
-      method: "GET"
+  useEffect(() => {
+    fetch('http://localhost:5000/api', {
+      method: 'GET'
     }).then(res => {
       res.json().then(arr => {
+        console.log(arr)
         setMusicArr(arr)
-        setSearchResults(arr)
-
       })
     })
   }, [])
 
-  //Searching on the musicArr
-  const searchRef = useRef()
-  const [searchResults, setSearchResults] = useState([])
-
-  function searchHandler(e){
-    const searchString = searchRef.current.value
-    
-    if(searchString == ''){
-      setSearchResults(musicArr)
-      return
-    }
-
-    //example of how extensible a single input can be
-    //what about write some commands to search by regex?
-    if(searchString == '*'){
-      setSearchResults(musicArr)
-      return
-    }
-
-    //results are all the musics that name or singer startsWith() the search string
-    setSearchResults(() => (
-      musicArr.filter(music=>(
-        music.name
-          .toUpperCase()
-          .startsWith(
-            searchString.toUpperCase()
-        ) || music.singer
-          .toUpperCase()
-          .startsWith(
-            searchString.toUpperCase()
-          )
-        )
-      )
-    ))
-  }
-
   return(
     <main>
-      {/*<input type="search" placeholder="Search:"
-        ref={searchRef} onChange={searchHandler}/>*/}
-
       <Player playlist={musicArr}/>
 
       <style jsx>{`
