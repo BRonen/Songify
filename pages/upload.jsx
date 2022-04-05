@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import Head from 'next/head'
+import Link from 'next/link'
 
 import Header from '../components/Header'
 
@@ -49,7 +50,9 @@ function Main(){
           type="file"
           ref={fileRef}
         />
-        <input type="submit" value="Upload music"/>
+        <Link href="/">
+          <button>Upload music</button>
+        </Link>
       </form>
 
       <style jsx>{`
@@ -63,6 +66,36 @@ function Main(){
           border-top-left-radius: 0px;
 
           background-image: linear-gradient(to bottom, #DDD, #F0F0F0);
+        }
+
+        form{
+          display: flex;
+          flex-direction: column;
+          row-gap: 10px;
+          padding: 0 20vw 15px;
+        }
+
+        @media (max-width: 600px){
+          form{
+            padding: 0 5vw 15px;
+          }
+        }
+
+        form *{
+          font-size: 1.4em;
+          padding: 5px;
+          border-radius: 20px;
+        }
+
+        form button{
+          color: #102021;
+          background-image: linear-gradient(to bottom, #FFFFFC , #DDDDDC);
+          box-shadow: 0px 0px 10px #AAAAAC inset;
+        }
+
+        form button:hover{
+          box-shadow: 0px 0px 10px #DDDDDC inset;
+          background-color: #FFFFFC;
         }
       `}</style>
     </main>
@@ -79,6 +112,7 @@ export default function Home(){
         <title>River Song - Upload</title>
         <link rel="icon" href='/favicon.ico'/>
       </Head>
+
       <Header pageButton={{
         path: '/',
         text: 'Home',
