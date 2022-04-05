@@ -1,9 +1,18 @@
-function Header(){
+import Link from 'next/link'
+
+function Header({ pageButton }){
   return(
     <header>
       <a href="https://github.com/BRonen">
         <img src="https://avatars.githubusercontent.com/u/33203683?v=4"/>
       </a>
+
+      <Link href={pageButton?.path || "/"}>
+        <button align="right">
+          <h1>{pageButton?.text || "Home"}</h1>
+        </button>
+      </Link>
+      
       <style jsx>{`
         header{
           display: flex;
@@ -50,12 +59,17 @@ function Header(){
           border: 1px solid #DDDDDC;
           box-shadow: 0px 0px 10px #AAAAAC inset;
           background-image: linear-gradient(to bottom, #FFFFFC , #DDDDDC);
+
+          cursor: pointer;
         }
         button:hover{
           background-color: #FFFFFC;
-          border: 1px outset #4CAFD6;
-          box-shadow: 0px 0px 10px #AAAAAC inset;
+          border: 2px outset #4CAFD6;
           background-image: linear-gradient(to bottom, #DDDDDC , #FFFFFC);
+        }
+
+        button h1{
+          text-decoration: none;
         }
     `}</style>
     </header>

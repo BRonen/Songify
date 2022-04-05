@@ -79,7 +79,10 @@ export default function Home(){
         <title>River Song - Upload</title>
         <link rel="icon" href='/favicon.ico'/>
       </Head>
-      <Header/>
+      <Header pageButton={{
+        path: '/',
+        text: 'Home',
+      }}/>
 
       <Main/>
 

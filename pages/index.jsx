@@ -82,12 +82,15 @@ function Main(){
 
 export default function Home(){
   return (
-    <div>
+    <>
       <Head>
         <title>River Song</title>
         <link rel="icon" href='/favicon.ico'/>
       </Head>
-      <Header/>
+      <Header pageButton={{
+        path: '/upload',
+        text: 'Upload',
+      }}/>
       <Main/>
 
       <style jsx global>{`
@@ -113,6 +116,6 @@ export default function Home(){
           border-radius: 20px;
         }
       `}</style>
-    </div>
+    </>
   )
 }
