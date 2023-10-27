@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { ref as sref, uploadBytes } from 'firebase/storage'
 import { firestorage, firestore, getCurrentUser } from '../services/firebase'
-import { addDoc, collection, getDocs, query, Timestamp } from '@firebase/firestore'
+import { addDoc, collection, getDocs, query, Timestamp } from 'firebase/firestore'
 import router from '../routes';
 
 const files = ref<any[]>([])
