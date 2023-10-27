@@ -46,7 +46,7 @@ export const usePlayerStore = defineStore('player', () => {
             firestore, `${user.uid}/musics/playlists/${playlistId}`
         ).withConverter(playlistConverter)
 
-        const playlistSnapshot = await getDoc<Playlist>(playlistRef)
+        const playlistSnapshot = await getDoc(playlistRef)
         
         const playlistData = playlistSnapshot.data()
 
