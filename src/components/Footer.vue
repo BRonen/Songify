@@ -1,17 +1,17 @@
 <script setup lang="ts">
-    import Audio from './player/Audio.vue'
+import Audio from "./player/Audio.vue";
 </script>
 
 <template>
-    <footer>
-        <Audio></Audio>
-    </footer>
+  <footer>
+    <Audio></Audio>
+  </footer>
 </template>
 
 <style scoped>
 footer {
-    position: absolute;
-    bottom: 0;
-    padding: 3rem;
+  position: absolute;
+  bottom: 0;
+  padding: 3rem;
 }
 </style>

@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from "vue-router"
-import { getCurrentUser } from "./services/firebase"
+import { createRouter, createWebHistory } from "vue-router";
+import { getCurrentUser } from "./services/firebase";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -34,19 +34,19 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
   ],
-})
+});
 
 router.beforeEach(async (to, from, next) => {
   if (to.meta.requiresAuth) {
     try {
-      await getCurrentUser()
-      return next()
-    } catch(err) {
-      console.error(err)
-      return next('/login')
+      await getCurrentUser();
+      return next();
+    } catch (err) {
+      console.error(err);
+      return next("/login");
     }
   }
-  next()
-})
+  next();
+});
 
-export default router
+export default router;

@@ -2,7 +2,7 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
-'on':
+"on":
   push:
     branches:
       - main
@@ -15,7 +15,7 @@ env:
   VITE_MESSAGING_SENDER_ID: ${{ secrets.VITE_MESSAGING_SENDER_ID }}
   VITE_APP_ID: ${{ secrets.VITE_APP_ID }}
   VITE_MEASUREMENT_ID: ${{ secrets.VITE_MEASUREMENT_ID }}
-  
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
       - run: pnpm install --frozen-lockfile && pnpm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_E1064 }}'
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST_E1064 }}"
           channelId: live
           projectId: test-e1064
