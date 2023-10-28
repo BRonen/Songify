@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { fireauth } from "../services/firebase";
 import router from "../routes";
 import usePlayerStore from "./playerStore";
+import { getCurrentUser } from "../services/firebase";
 
 export const useAuthStore = defineStore("auth", () => {
   const profile = ref<User | null>(null);
@@ -19,6 +20,10 @@ export const useAuthStore = defineStore("auth", () => {
 
     router.push("/login");
   };
+
+  getCurrentUser().then(user => {
+    profile.value = user;
+  })
 
   return { profile, isAuthenticated, logout };
 });
