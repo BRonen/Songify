@@ -36,8 +36,8 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach(async (to, from, next) => {
-  if (to.meta.requiresAuth) {
+router.beforeEach(async (to, _from, next) => {
+  if (to.meta["requiresAuth"]) {
     try {
       await getCurrentUser();
       return next();

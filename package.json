@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "check": "tsc --noEmit && vue-tsc",
+    "check": "vue-tsc --watch",
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "firebase deploy",

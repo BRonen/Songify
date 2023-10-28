@@ -2,9 +2,9 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import {
   doc,
-  FirestoreDataConverter,
   getDoc,
-  Timestamp,
+  type Timestamp,
+  type FirestoreDataConverter,
 } from "firebase/firestore";
 import { firestorage, firestore, getCurrentUser } from "../services/firebase";
 import {
