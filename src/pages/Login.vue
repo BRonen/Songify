@@ -16,7 +16,6 @@ const password = ref("");
 
 async function loginWithGoogle() {
   try {
-    console.log(email.value, password.value);
     const credentials = await signInWithPopup(
       fireauth,
       new GoogleAuthProvider(),
@@ -43,7 +42,6 @@ async function loginWithGoogle() {
 
 async function login() {
   try {
-    console.log(email.value, password.value);
     const credentials = await signInWithEmailAndPassword(
       fireauth,
       email.value,
@@ -71,48 +69,32 @@ async function login() {
 </script>
 
 <template>
-  <form @submit.prevent="login">
-    <fieldset>
-      <legend>login</legend>
+  <form
+    @submit.prevent="login"
+    class="bg-latte-mantle border border-latte-surface-300 px-2/7 py-12"
+  >
+    <fieldset class="py-4 px-8 rounded-md flex flex-col">
+      <legend class="text-2xl font-bold">login</legend>
       <label for="email">E-mail:</label>
-      <input v-model="email" name="email" type="email" />
+      <input
+        v-model="email"
+        name="email"
+        type="email"
+        placeholder="Email"
+        class="rounded-sm mb-4"
+      />
 
       <label for="password">Password:</label>
-      <input v-model="password" name="password" type="password" />
+      <input
+        v-model="password"
+        name="password"
+        type="password"
+        placeholder="Password"
+        class="rounded-sm"
+      />
     </fieldset>
     <a @click="loginWithGoogle" href="#">Login with google</a>
-    <button type="submit">submit</button>
+    <button type="submit" class="bg-red-400 hover:bg-red-500">submit</button>
     <router-link to="/register">I don't have an account yet</router-link>
   </form>
 </template>
-
-<style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: clamp(25rem, 50vw, 40rem);
-  margin: auto;
-}
-fieldset {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  border: none;
-}
-fieldset legend {
-  margin: 0 auto;
-  font-size: 2rem;
-}
-fieldset label {
-  text-align: left;
-  width: 100%;
-}
-fieldset input {
-  width: 100%;
-}
-a {
-  display: block;
-  margin: 1rem auto;
-}
-</style>
