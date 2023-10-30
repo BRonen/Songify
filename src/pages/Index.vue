@@ -7,6 +7,7 @@ import {
   getCurrentUser,
 } from "../services/firebase";
 import { useAuthStore } from "../stores/authStore";
+import Header from "../components/Header.vue";
 
 const authStore = useAuthStore();
 const playlists = ref<any[]>([]);
@@ -23,6 +24,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Header />
   <router-link
     v-for="playlist of playlists"
     :to="`/playlist/${playlist.uid}`"

@@ -21,9 +21,9 @@ export const useAuthStore = defineStore("auth", () => {
     router.push("/login");
   };
 
-  getCurrentUser().then(user => {
+  getCurrentUser().then((user) => {
     profile.value = user;
-  })
+  });
 
   return { profile, isAuthenticated, logout };
 });
